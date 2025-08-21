@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>웨이팅 등록</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>My Restaurant 웨이팅</h1>
+  <form id="waitingForm">
+    이름: <input type="text" id="name" required><br>
+    인원: <input type="number" id="party" required min="1"><br>
+    <button type="submit">등록</button>
+  </form>
+
+  <h2>현재 대기 명단</h2>
+  <ul id="waitingList"></ul>
+
+  <script>
+    const form = document.getElementById('waitingForm');
+    const waitingList = document.getElementById('waitingList');
+
+    // LocalStorage에서 기존 대기 목록 불러오기
+    let waitingData = JSON.parse(localStorage.getItem('waitingData') || '[]');
+
+    function renderList() {
+      waitingList.innerHTML = '';
+      waitingData.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerText = `${index + 1}번: ${item.name} (${item.party}명)`;
+        waitingList.appendChild(li);
+      });
+    }
+
+    renderList();
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const party = document.getElementById('party').value;
+      waitingData.push({name, party});
+      localStorage.setItem('waitingData', JSON.stringify(waitingData));
+      renderList();
+      form.reset();
+      alert(`등록 완료! 현재 순번: ${waitingData.length}`);
+    });
+  </script>
+</body>
+</html>
