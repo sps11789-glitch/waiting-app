@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>관리자 대시보드</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>관리자 대시보드</h1>
+  <h2>대기 명단</h2>
+  <ul id="waitingList"></ul>
+
+  <script>
+    const waitingList = document.getElementById('waitingList');
+    let waitingData = JSON.parse(localStorage.getItem('waitingData') || '[]');
+
+    function renderList() {
+      waitingList.innerHTML = '';
+      waitingData.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `${index + 1}번: ${item.name} (${item.party}명) <button onclick="callCustomer(${index})">호출</button>`;
+        waitingList.appendChild(li);
+      });
+    }
+
+    function callCustomer(index) {
+      alert(`${waitingData[index].name}님, 들어오세요!`);
+      waitingData.splice(index,1);
+      localStorage.setItem('waitingData', JSON.stringify(waitingData));
+      renderList();
+    }
+
+    renderList();
+  </script>
+</body>
+</html>
